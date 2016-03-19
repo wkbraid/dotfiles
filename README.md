@@ -2,7 +2,11 @@
 
 Personal configuration management, including scripting tools.
 
-Note that currently, none of this is real.
+## Installation
+
+    git clone https://github.com/wspk/dotfiles ~/.dotfiles
+    ~/.dotfiles/scripts/bootstrap
+    dofiles install --all
 
 ## Usage
 
@@ -74,10 +78,3 @@ Use the help command (`dotfiles help <command>`) to learn more about these.
 Or all at once using the `--all` flag:
 
     dotfiles install --all
-
-
-## Installation
-
-    git clone https://github.com/wspk/dotfiles ~/.dotfiles
-    ~/.dotfiles/scripts/bootstrap
-    dofiles install --all

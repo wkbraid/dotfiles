@@ -3,4 +3,44 @@
 use strict;
 use warnings;
 
+use File::HomeDir;
 
+my $home = File::HomeDir->my_home . "";
+my $dotpath = "$home/.dotfiles";
+
+
+sub main {
+    if (-d "$home/bin") {
+        print "$home/bin already exists. Continuing.\n";     
+    } else {
+        print "Creating directory $home/bin...\n";
+        mkdir "$home/bin" or die "Unable to make directory $home/bin.\n";
+    }
+    if (-e "$home/bin/dotfiles") {
+        if (query("The file $home/bin/dotfiles already exists. Overwrite?")) {
+            unlink "$home/bin/dotfiles" or die "Unable to remove $home/bin/dotfiles.\n";
+        }
+    }
+    print "Adding executable to $home/bin...\n";
+    symlink "$dotpath/bin/dotfiles", "$home/bin/dotfiles" or 
+        die "Unable to link $home/bin/dotfiles to $dotpath/bin/dotfiles.\n";
+
+    system("$dotpath/bin/dotfiles", "sync");
+}
+
+sub query {
+    my $question = shift;
+    print "$question [Y/n] ";
+    while() {
+        my $response = <STDIN>;
+        chomp $response;
+        if ($response eq '' or $response eq 'y' or $response eq 'Y') {
+            return 1;
+        } elsif ($response eq 'n' or $response eq 'N') {
+            return 0;
+        }
+        print "Please enter y or n: "; 
+    }
+}
+
+main(@ARGV);

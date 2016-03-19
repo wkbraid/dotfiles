@@ -8,7 +8,7 @@ use File::Basename;
 use File::Copy qw(move);
 
 my $home = File::HomeDir->my_home . "/";
-my $dotpath = $home . ".dotfiles/";
+my $dotpath = $home . ".dotfiles";
 
 my $commands = { # {{{
     'help' => {
@@ -33,7 +33,7 @@ my $commands = { # {{{
     },
     'install' => {
         'desc' => 'Run installation scripts, can be used with the --all option.',
-        'usage' => 'Usage: dotfiles install [--all] [<install-script>]',
+        'usage' => 'Usage: dotfiles install [--all | <install-script>]',
         'func' => \&install,
     },
     'commit' => {
@@ -67,7 +67,8 @@ sub main {
 }
 
 sub query {
-    print "Are you sure you want to proceed? [Y/n] ";
+    my $question = shift;
+    print "$question [Y/n] ";
     while() {
         my $response = <STDIN>;
         chomp $response;
@@ -115,8 +116,8 @@ sub add {
     }
 
     $file = basename($file);
-    my $original = $home . $file;
-    my $tracked = $dotpath . "$context/$file";
+    my $original = "$home/$file";
+    my $tracked = "$dotpath/$context/$file";
 
     if (-l $original) { die "Symlink already exists.\n"; }
     if ((not -f $original) and (not -d $original)) {
@@ -127,15 +128,15 @@ sub add {
     if (-e $tracked) {
         print "Overwriting existing file $tracked\n";
         if (query()) {
-            unlink $tracked;
+            unlink $tracked or die "Unable to remove $tracked.\n";
         } else {
             die "Exiting...\n"; 
         }
     }
 
-    move $original, $tracked;
-    print "Linking $original => $tracked\n";
-    if (not symlink($tracked, $original)) { die "Error creating symlink.\n" }
+    move $original, $tracked or die "Unable to move $original to $tracked.\n";
+    print "Linking $original => $tracked...\n";
+    symlink $tracked, $original or die "Unable to link $original => $tracked.\n";
 }
 
 sub restore {
@@ -151,7 +152,7 @@ sub restore {
 
     $file = basename($file);
     my $original = $home . $file;
-    my $tracked = $dotpath . "$context/$file";
+    my $tracked = "$dotpath/$context/$file";
 
     if (not -e $tracked) {
         die "Could not find file or directory: $tracked.\n"; }
@@ -159,29 +160,88 @@ sub restore {
         die "The file $original is not a symlink.\n"; }
     
     print "Replacing linked $original with actual file $tracked...\n";
-    unlink $original;
-    move $tracked, $original;
+    unlink $original or die "Unable to remove $original.\n";
+    move $tracked, $original or die "Unable to move $tracked to $original.\n";
     
 }
 # }}}
 
 #= Configuration {{{ ==========================================================
 sub sync {
+    print "Checking for remote changes...\n";
+    pull();
 
+    opendir(my $DH, "$dotpath/home/") or die "Unable to oepn $dotpath/home/.\n";
+    my @homefiles = readdir($DH);
+    closedir($DH);
+    foreach my $file (@homefiles) {
+        next if ($file =~ /^\.+$/); #avoid . and ..
+        my $tracked = "$dotpath/home/$file";
+        my $original = "$home/$file";
+
+        syncFile($tracked, $original);
+    }
+
+    opendir($DH, "$dotpath/bin/") or die "Unable to open $dotpath/bin/.\n";
+    my @binfiles = readdir($DH);
+    closedir($DH);
+    foreach my $file (@binfiles) {
+        next if ($file =~ /^\.+$/);
+        my $tracked = "$dotpath/bin/$file";
+        my $original = "$home/bin/$file";
+
+        syncFile($tracked, $original);
+    }
 }
-sub install {
 
+sub syncFile {
+    my $tracked = shift;
+    my $original = shift;
+
+    print "Attempting to sync $tracked...\n";
+    if (-l $original) {
+        print "Link already exists at $original.\n"; return;
+    } 
+    if (-e $original) {
+        if (query("File $original already exists. Overwrite?")) {
+            print "Removing file $original...\n";
+            unlink $original or die "Unable to remove $original.\n";
+        }
+    }
+
+    print "Linking $original => $tracked...\n";
+    symlink $tracked, $original or die "Unable to link $original => $tracked.\n"; 
+}
+
+sub install {
+    if (scalar(@_) != 1) { return help('install'); }
+    my $script = shift;
+    if ($script eq '--all') {
+        opendir(my $DH, "$dotpath/install/") or die "Unable to open $dotpath/install/.\n";
+        my @files = readdir($DH);
+        closedir($DH);
+        foreach my $file (@files) {
+            if (-f $file) {
+                install(basename($file)) 
+            }
+        }
+    } else {
+        my $file = "$dotpath/scripts/$script";
+        (-e $file) or die "File $file does not exist.\n";
+        print "Executing $file...\n";
+        system($file) or die "Error while executing $file.\n";
+    }
 }
 # }}}
 
 #= Git {{{ ====================================================================
 sub commit {
     my $args = scalar(@_);
-    system("git", "-C", $dotpath, "add", ".");
+    system("git", "-C", "$dotpath/", "add", ".");
     if ($args == 0) {
-        system("git", "-C", $dotpath, "commit", "-a");
+        system("git", "-C", "$dotpath/", "commit", "-a");
     } elsif ($args == 1) {
-        system("git", "-C", $dotpath, "commit", "-am", $_[0]);
+        system("git", "-C", "$dotpath/", "commit", "-am", $_[0]);
     } else {
         help('commit');
     }
@@ -190,7 +250,7 @@ sub commit {
 sub pull {
     my $args = scalar(@_);
     if ($args == 0) {
-        system("git", "-C", $dotpath, "pull");
+        system("git", "-C", "$dotpath/", "pull");
     } else {
         help('pull');
     }
@@ -199,15 +259,15 @@ sub pull {
 sub push {
     my $args = scalar(@_);
     if ($args == 0) {
-        system("git", "-C", $dotpath, "push");
+        system("git", "-C", "$dotpath/", "push");
     } else {
         help('push');
     }
 }
 
 sub git {
-    system("git", "-C", $dotpath, @_);
+    system("git", "-C", "$dotpath/", @_);
 }
 # }}}
 
-main(@ARGV)
+main(@ARGV);
