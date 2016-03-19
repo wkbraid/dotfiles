@@ -38,7 +38,7 @@ my $commands = { # {{{
     },
     'commit' => {
         'desc' => 'Commit changes to the underlying repository.',
-        'usage' => 'Usage: dotfiles commit [<message>]',
+        'usage' => 'Usage: dotfiles commit <message>',
         'func' => \&commit,
     },
     'pull' => {
@@ -236,12 +236,10 @@ sub install {
 
 #= Git {{{ ====================================================================
 sub commit {
-    my $args = scalar(@_);
-    system("git", "-C", "$dotpath/", "add", ".");
-    if ($args == 0) {
-        system("git", "-C", "$dotpath/", "commit", "-a");
-    } elsif ($args == 1) {
-        system("git", "-C", "$dotpath/", "commit", "-am", $_[0]);
+    if (scalar(@_) == 1) {
+        my $msg = shift;
+        system("git", "-C", "$dotpath/", "add", ".");
+        system("git", "-C", "$dotpath/", "commit", "-am", $msg);
     } else {
         help('commit');
     }
