@@ -29,18 +29,18 @@ This removes the symbolic link in `$HOME` and copies the original file back to
 
 #### bin
 
-To track items from `$HOME/bin`, use `dotfiles bin add`:
+To track items from `$HOME/bin`, use `dotfiles bin-add`:
 
-    dotfiles bin add script-name
+    dotfiles bin-add script-name
 
 This adds the script to `.dotfiles/bin` and creates a symbolic link in
 `$HOME/bin` referencing the file.
 
 To save this change, run `dotfiles commit` as before.
 
-To stop tracking an item, use `dotfiles bin restore`:
+To stop tracking an item, use `dotfiles bin-restore`:
 
-    dotfiles bin restore script-name
+    dotfiles bin-restore script-name
 
 
 #### Sync Remote Changes

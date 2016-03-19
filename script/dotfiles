@@ -3,4 +3,158 @@
 use strict;
 use warnings;
 
+use File::HomeDir;
 
+my $dotpath = File::HomeDir->my_home . "/.dotfiles/";
+
+my $commands = { # {{{
+    'help' => {
+        'desc' => 'Display this help information.',
+        'usage' => 'Usage: dotfiles help [command]',
+        'func' => \&help,
+    },
+    'add' => {
+        'desc' => 'Begin tracking a file or directory.',
+        'usage' => 'Usage: dotfiles add <file>',
+        'func' => \&add,
+    },
+    'restore' => {
+        'desc' => 'Stop tracking a file and restore it to the home directory.',
+        'usage' => 'Usage: dotfiles restore <file>',
+        'func' => \&restore,
+    },
+    'bin-add' => {
+        'desc' => 'Begin tracking a binary file.',
+        'usage' => 'Usage: dotfiles bin-add <file>',
+        'func' => \&binAdd,
+    },
+    'bin-restore' => {
+        'desc' => 'Stop tracking a binary file and restore it to the home directory.',
+        'usage' => 'Usage: dotfiles bin-restore <file>',
+        'func' => \&binRestore,
+    },
+    'sync' => {
+        'desc' => 'Pull and sync remote changes to the home directory.',
+        'usage' => 'Usage: dotfiles sync',
+        'func' => \&sync,
+    },
+    'install' => {
+        'desc' => 'Run installation scripts, can be used with the --all option.',
+        'usage' => 'Usage: dotfiles install [--all] [<install-script>]',
+        'func' => \&install,
+    },
+    'commit' => {
+        'desc' => 'Commit changes to the underlying repository.',
+        'usage' => 'Usage: dotfiles commit [<message>]',
+        'func' => \&commit,
+    },
+    'pull' => {
+        'desc' => 'Perform a git pull on the underlying repository.',
+        'usage' => 'Usage: dotfiles pull',
+        'func' => \&pull,
+    },
+    'push' => {
+        'desc' => 'Performs a git push on the underlying repository.',
+        'usage' => 'Usage: dotfiles push',
+        'func' => \&push,
+    },
+    'git' => {
+        'desc' => 'Shortcut to run arbitrary git commands on the underlying repository.',
+        'usage' => 'Usage: dotfiles git [<args>...]',
+        'func' => \&git,
+    },
+}; # }}}
+
+sub main {
+    git(@ARGV);
+}
+
+sub help { # {{{
+    my $args = scalar(@_);
+    if ($args == 0) {
+        print "Usage: dotfiles <command> [<arguments>]\n\n";
+
+        print "Options:\n",
+              "  -h --help      Display this help information.\n\n";
+
+        print "Commands:\n";
+        foreach my $name (sort keys %$commands) {
+            printf "  %-20s%s\n", $name, $commands->{$name}{desc};
+        }
+
+        print "\nFor more information, see the README.\n";
+    } elsif ($args == 1) {
+        my $cmd = shift;
+        printf "%s\n", $commands->{$cmd}{usage};
+    } else {
+        help('help');
+    }
+} # }}}
+
+#= Dotfiles {{{ ===============================================================
+sub add {
+
+}
+
+sub restore {
+
+}
+# }}}
+
+#= Binaries {{{ ===============================================================
+sub binAdd {
+
+}
+
+sub binRestore {
+
+}
+# }}}
+
+#= Configuration {{{ ==========================================================
+sub sync {
+
+}
+sub install {
+
+}
+# }}}
+
+
+#= Git {{{ ====================================================================
+sub commit {
+    my $args = scalar(@_);
+    system("git", "-C", $dotpath, "add", ".");
+    if ($args == 0) {
+        system("git", "-C", $dotpath, "commit", "-a");
+    } elsif ($args == 1) {
+        system("git", "-C", $dotpath, "commit", "-am", $_[0]);
+    } else {
+        help('commit');
+    }
+}
+
+sub pull {
+    my $args = scalar(@_);
+    if ($args == 0) {
+        system("git", "-C", $dotpath, "pull");
+    } else {
+        help('pull');
+    }
+}
+
+sub push {
+    my $args = scalar(@_);
+    if ($args == 0) {
+        system("git", "-C", $dotpath, "push");
+    } else {
+        help('push');
+    }
+}
+
+sub git {
+    system("git", "-C", $dotpath, @_);
+}
+# }}}
+
+main()
