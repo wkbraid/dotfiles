@@ -4,8 +4,11 @@ use strict;
 use warnings;
 
 use File::HomeDir;
+use File::Basename;
+use File::Copy qw(move);
 
-my $dotpath = File::HomeDir->my_home . "/.dotfiles/";
+my $home = File::HomeDir->my_home . "/";
+my $dotpath = $home . ".dotfiles/";
 
 my $commands = { # {{{
     'help' => {
@@ -15,23 +18,13 @@ my $commands = { # {{{
     },
     'add' => {
         'desc' => 'Begin tracking a file or directory.',
-        'usage' => 'Usage: dotfiles add <file>',
+        'usage' => 'Usage: dotfiles add [bin | home] <file>',
         'func' => \&add,
     },
     'restore' => {
         'desc' => 'Stop tracking a file and restore it to the home directory.',
-        'usage' => 'Usage: dotfiles restore <file>',
+        'usage' => 'Usage: dotfiles restore [bin | home] <file>',
         'func' => \&restore,
-    },
-    'bin-add' => {
-        'desc' => 'Begin tracking a binary file.',
-        'usage' => 'Usage: dotfiles bin-add <file>',
-        'func' => \&binAdd,
-    },
-    'bin-restore' => {
-        'desc' => 'Stop tracking a binary file and restore it to the home directory.',
-        'usage' => 'Usage: dotfiles bin-restore <file>',
-        'func' => \&binRestore,
     },
     'sync' => {
         'desc' => 'Pull and sync remote changes to the home directory.',
@@ -66,7 +59,25 @@ my $commands = { # {{{
 }; # }}}
 
 sub main {
-    git(@ARGV);
+    my $args = scalar(@_);
+    if ($args == 0) { help(); return }
+
+    my $cmd = shift;
+    $commands->{$cmd}{func}(@_);
+}
+
+sub query {
+    print "Are you sure you want to proceed? [Y/n] ";
+    while() {
+        my $response = <STDIN>;
+        chomp $response;
+        if ($response eq '' or $response eq 'y' or $response eq 'Y') {
+            return 1;
+        } elsif ($response eq 'n' or $response eq 'N') {
+            return 0;
+        }
+        print "Please enter y or n: "; 
+    }
 }
 
 sub help { # {{{
@@ -78,8 +89,8 @@ sub help { # {{{
               "  -h --help      Display this help information.\n\n";
 
         print "Commands:\n";
-        foreach my $name (sort keys %$commands) {
-            printf "  %-20s%s\n", $name, $commands->{$name}{desc};
+        foreach my $cmd (sort keys %$commands) {
+            printf "  %-20s%s\n", $cmd, $commands->{$cmd}{desc};
         }
 
         print "\nFor more information, see the README.\n";
@@ -93,21 +104,64 @@ sub help { # {{{
 
 #= Dotfiles {{{ ===============================================================
 sub add {
+    if (scalar(@_) == 0) { return help('add') }
 
+    my $context = 'home';
+    my $file = shift;
+    if ($file eq 'bin' or $file eq 'home') {
+        $context = $file;
+        if (scalar(@_) != 0) { return help('add') }
+        $file = shift;
+    }
+
+    $file = basename($file);
+    my $original = $home . $file;
+    my $tracked = $dotpath . "$context/$file";
+
+    if (-l $original) { die "Symlink already exists.\n"; }
+    if ((not -f $original) and (not -d $original)) {
+        die "Cannot find file or directory: $original\n"; }
+    if ($original eq '/' or $original eq '..' or $original eq '.') {
+        die "Invalid file name $original\n"; }
+    
+    if (-e $tracked) {
+        print "Overwriting existing file $tracked\n";
+        if (query()) {
+            unlink $tracked;
+        } else {
+            die "Exiting...\n"; 
+        }
+    }
+
+    move $original, $tracked;
+    print "Linking $original => $tracked\n";
+    if (not symlink($tracked, $original)) { die "Error creating symlink.\n" }
 }
 
 sub restore {
+    if (scalar(@_) == 0) { help('add'); return; }
+    
+    my $context = 'home';
+    my $file = shift; 
+    if ($file eq 'bin' or $file eq 'home') {
+        $context = $file;
+        if (scalar(@_) != 0) { return help('add') }
+        $file = shift;
+    }
 
-}
-# }}}
+    $file = basename($file);
+    my $original = $home . $file;
+    my $tracked = $dotpath . "$context/$file";
 
-#= Binaries {{{ ===============================================================
-sub binAdd {
-
-}
-
-sub binRestore {
-
+    if (not -e $tracked) {
+        die "Could not find file or directory: $tracked.\n"; }
+    if (not -l $original) {
+        die "The file $original is not a symlink.\n"; }
+    
+    print "Replacing linked $original with actual file $tracked...\n";
+    unlink $original;
+    move $tracked, $original;
+    
 }
 # }}}
 
@@ -119,7 +173,6 @@ sub install {
 
 }
 # }}}
-
 
 #= Git {{{ ====================================================================
 sub commit {
@@ -157,4 +210,4 @@ sub git {
 }
 # }}}
 
-main()
+main(@ARGV)
