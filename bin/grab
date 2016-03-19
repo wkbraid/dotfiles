@@ -1,0 +1,74 @@
+#!/usr/bin/perl
+
+###################################################################
+# Search and grab mp3 files from the internet.
+# Usage: grab <search>
+# Options:
+#
+###################################################################
+
+use strict;
+use warnings;
+
+use Getopt::Long qw(GetOptions);
+use LWP::Simple qw(get getstore);
+use JSON qw(from_json);
+use Scalar::Util qw(looks_like_number);
+use Data::Dumper;
+
+my $help = 0; #print a help message and exit
+my $limit = 10; #number of search results to display
+my $dest = "$ENV{HOME}/media/listen/music"; #download destination
+
+
+my $target = "http://slider.kz/vk_auth.php?q=";
+
+exit(main());
+#==================================================================
+# Core Functions
+#==================================================================
+sub main {
+    #Parse the command line arguements
+    GetOptions(
+        'help|h|?' => \$help,
+        'limit=i' => \$limit,
+        'dest=s' => \$dest
+    );
+    usage(0) if $help; #print usage and exit
+    usage(1) if !@ARGV; #require non-null search term
+
+    #query the target
+    my $query = join('+', @ARGV);
+    my $result = get($target . $query) or
+        die "Unable to reach $target$query\n";
+    my @data = from_json($result)->{feed};
+
+    #print available songs
+    for (my $i=0; $i<$limit and $data[0][$i]; $i++) {
+        my $entry = $data[0][$i]{entry};
+        print "$i) $entry->{artist} :: $entry->{title} :: " .
+            "$entry->{duration}\n";
+    }
+
+    #get user selection
+    print "Selection: "; my $choice = <STDIN>; chomp $choice;
+    until (looks_like_number($choice) and $data[0][$choice]) {
+        print "Selection '$choice' is not a valid option.\n";
+        print "Selection: "; $choice = <STDIN>; chomp $choice;
+    }
+
+    #download song to destination folder
+    my $entry = $data[0][$choice]{entry};
+    my $filename = "$entry->{artist} - $entry->{title}.mp3";
+    print "Downloading to $dest/$filename\n";
+    getstore($entry->{dlink}, "$dest/$filename");
+    return 0;
+}
+
+#==================================================================
+# Helper Functions
+#==================================================================
+sub usage {
+    print "Usage: grab [-h] [--limit <num>] [--dest <path>] <query>\n";
+    exit(shift);
+}

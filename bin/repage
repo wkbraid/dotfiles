@@ -1,0 +1,16 @@
+offset=$2
+
+texfile="\documentclass[a4paper]{article}% or use 'letterpaper'
+\usepackage{pdfpages}
+\usepackage[pdfpagelabels]{hyperref}
+\begin{document}
+\renewcommand{\thepage}{\roman{page}}
+\includepdf[pages=1-$offset]{scan.pdf}
+% Back to normal (arabic) numbers:
+\renewcommand{\thepage}{\arabic{page}}
+% Reset page counter to 1:
+\setcounter{page}{1}
+\includepdf[pages=$(($offset+1))-]{scan.pdf}
+\end{document}"
+
+echo $texfile

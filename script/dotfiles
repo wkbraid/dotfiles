@@ -7,8 +7,8 @@ use File::HomeDir;
 use File::Basename;
 use File::Copy qw(move);
 
-my $home = File::HomeDir->my_home . "/";
-my $dotpath = $home . ".dotfiles";
+my $home = File::HomeDir->my_home;
+my $dotpath = "$home/.dotfiles";
 
 my $commands = { # {{{
     'help' => {
@@ -111,12 +111,12 @@ sub add {
     my $file = shift;
     if ($file eq 'bin' or $file eq 'home') {
         $context = $file;
-        if (scalar(@_) != 0) { return help('add') }
+        if (scalar(@_) != 1) { return help('add') }
         $file = shift;
     }
 
     $file = basename($file);
-    my $original = "$home/$file";
+    my $original = "$home/$context/$file";
     my $tracked = "$dotpath/$context/$file";
 
     if (-l $original) { die "Symlink already exists.\n"; }
