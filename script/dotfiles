@@ -116,8 +116,10 @@ sub add {
     }
 
     $file = basename($file);
-    my $original = "$home/$context/$file";
     my $tracked = "$dotpath/$context/$file";
+    my $original;
+    if ($context eq 'home') { $original = "$home/$file";
+    } else { $original = "$home/$context/$file"; }
 
     if (-l $original) { die "Symlink already exists.\n"; }
     if ((not -f $original) and (not -d $original)) {
@@ -151,8 +153,10 @@ sub restore {
     }
 
     $file = basename($file);
-    my $original = $home . $file;
     my $tracked = "$dotpath/$context/$file";
+    my $original;
+    if ($context eq 'home') { $original = "$home/$file"; }
+    else { $context = "$home/$context/$file"; }
 
     if (not -e $tracked) {
         die "Could not find file or directory: $tracked.\n"; }
