@@ -64,6 +64,7 @@ sub main {
 
     my $cmd = shift;
     $commands->{$cmd}{func}(@_);
+    # TODO check if command exists before calling
 }
 
 sub query {

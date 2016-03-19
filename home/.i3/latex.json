@@ -1,0 +1,81 @@
+// vim:ts=4:sw=4:et
+{
+    // splitv split container with 2 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "layout": "splitv",
+    "percent": 0.5,
+    "type": "con",
+    "nodes": [
+        {
+            "border": "pixel",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 600,
+               "width": 800,
+               "x": 0,
+               "y": 0
+            },
+            "name": "zathura",
+            "percent": 0.8,
+            "swallows": [
+               {
+               // "class": "^Zathura$",
+               // "instance": "^zathura$",
+               // "title": "^zathura$",
+               // "transient_for": "^$"
+               }
+            ],
+            "type": "con"
+        },
+        {
+            "border": "pixel",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 457,
+               "width": 732,
+               "x": 0,
+               "y": 0
+            },
+            "name": "Terminal",
+            "percent": 0.2,
+            "swallows": [
+               {
+               // "class": "^Gnome\\-terminal$",
+               // "instance": "^gnome\\-terminal\\-server$",
+               // "title": "^Terminal$",
+               // "transient_for": "^$",
+               // "window_role": "^gnome\\-terminal\\-window\\-247e17aa\\-e38a\\-40a9\\-a873\\-311e743169dc$"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
+{
+    "border": "pixel",
+    "current_border_width": 2,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 412,
+       "width": 644,
+       "x": 0,
+       "y": 0
+    },
+    "name": "[No Name] - GVIM1",
+    "percent": 0.5,
+    "swallows": [
+       {
+       // "class": "^Gvim$",
+       // "instance": "^gvim$",
+       // "title": "^\\[No\\ Name\\]\\ \\-\\ GVIM1$",
+       // "transient_for": "^$",
+       // "window_role": "^vim\\-2897\\-2728079653\\-1454001600$"
+       }
+    ],
+    "type": "con"
+}
+

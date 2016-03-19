@@ -1,0 +1,2 @@
+:def hoogle \x -> return $ ":!hoogle --color --count=7 \"" ++ x ++ "\""
+:def doc \x -> return $ ":!hoogle --color --info \"" ++ x ++ "\""
