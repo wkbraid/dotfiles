@@ -26,6 +26,11 @@ my $commands = { # {{{
         'usage' => 'Usage: dotfiles restore [bin | home] <file>',
         'func' => \&restore,
     },
+    'list' => {
+        'desc' => 'List all of the tracked files and directories.',
+        'usage' => 'Usage: dotfiles list',
+        'func' => \&list,
+    },
     'sync' => {
         'desc' => 'Pull and sync remote changes to the home directory.',
         'usage' => 'Usage: dotfiles sync',
@@ -169,6 +174,43 @@ sub restore {
     move $tracked, $original or die "Unable to move $tracked to $original.\n";
     
 }
+
+sub list {
+    opendir(my $dh, "$dotpath/home/") or die "Unable to open $dotpath/home/.\n";
+    my @homefiles = readdir($dh);
+    closedir($dh);
+    foreach my $file (@homefiles) {
+        next if ($file =~ /^\.+$/);
+        my $tracked = "$dotpath/home/$file";
+        my $original = "$home/$file";
+
+        printLink($tracked, $original)
+    }
+
+    opendir($dh, "$dotpath/bin/") or die "Unable to open $dotpath/bin/.\n";
+    my @binfiles = readdir($dh);
+    closedir($dh);
+    foreach my $file (@binfiles) {
+        next if ($file =~ /^\.+$/);
+        my $tracked = "$dotpath/bin/$file";
+        my $original = "$home/bin/$file";
+
+        printLink($tracked, $original)
+    }
+}
+
+sub printLink {
+    my $tracked = shift;
+    my $original = shift;
+    if (not -e $original) {
+        $original = "[missing]";
+    } elsif (not -l $original) {
+        $original = "[not a symbolic link]";
+    }
+
+    printf "%-49s <= $original\n", $tracked;
+}
+
 # }}}
 
 #= Configuration {{{ ==========================================================
@@ -176,7 +218,7 @@ sub sync {
     print "Checking for remote changes...\n";
     pull();
 
-    opendir(my $DH, "$dotpath/home/") or die "Unable to oepn $dotpath/home/.\n";
+    opendir(my $DH, "$dotpath/home/") or die "Unable to open $dotpath/home/.\n";
     my @homefiles = readdir($DH);
     closedir($DH);
     foreach my $file (@homefiles) {

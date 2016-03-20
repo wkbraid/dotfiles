@@ -36,8 +36,6 @@ alias vpnb="sudo openvpn ~/misc/browncs-gateall.ovpn"
 alias matlab="matlab -nodesktop -nosplash"
 alias vmatlab="$(which matlab)"
 
-#Source environment specific changes
-source .environment
 
 cd ~/ #Sunlab hack, get rid of /gpfs/main/home/wkochans
 
