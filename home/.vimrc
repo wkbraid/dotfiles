@@ -26,6 +26,8 @@ let g:mapleader = "\\"
 
 set lazyredraw                                      "only redraw when necessary
 
+let $PATH = $PATH . ':' . expand('~/.local/bin')
+
 
 " }}}
 
@@ -42,11 +44,28 @@ let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 
-au FileType haskell nnoremap <buffer> <silent> tt :HdevtoolsType<CR>
-au FileType haskell nnoremap <buffer> <silent> tq :HdevtoolsClear<CR>
+map <silent> tw :GhcModTypeInsert<CR>
+map <silent> ts :GhcModSplitFunCase<CR>
+map <silent> tq :GhcModType<CR>
+map <silent> te :GhcModTypeClear<CR>
 
-command C !ghci %
+let g:haskell_tabular = 1
+vmap a= :Tabularize /=<CR>
+vmap a; :Tabularize /::<CR>
+vmap a- :Tabularize /-><CR>
 
+"let g:SuperTabDefaultCompletionType = '<c-x><c-o>'
+
+"if has("gui_running")
+    "imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o")<cr>
+"else
+    "if has("unix")
+        "inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o")<cr>
+    "endif
+"endif
+
+let g:haskellmode_completion_ghc = 1
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 
 " }}}
@@ -57,6 +76,7 @@ command C !ghci %
 set wildmenu                                        "turn on the wild menu
 set wildmode=longest:full,full
 set wildignore=*.o,*~,*.pyc                         "ignore compiled files
+set wildignore+=*.swp,*.swo,*.zip,.git,.stack-work
 
 set cmdheight=2                                     "height of the command bar
 

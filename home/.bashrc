@@ -6,7 +6,7 @@ umask 007 #New files are private by default
 #Environment Variables
 #=============================================================
 export PATH="/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin"
-export PATH="$PATH:$HOME/bin"
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 export MANPATH="/local/share/man:/usr/local/man:/usr/share/man:/usr/local/share/man"
 export EDITOR=gvim
 export BROWSER=/usr/bin/chromium-browser
