@@ -58,6 +58,9 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+BASE16_SHELL="$HOME/.config/base16-shell/base16-default.dark.sh"
+[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 

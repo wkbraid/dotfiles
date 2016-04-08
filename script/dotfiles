@@ -18,12 +18,12 @@ my $commands = { # {{{
     },
     'add' => {
         'desc' => 'Begin tracking a file or directory.',
-        'usage' => 'Usage: dotfiles add [bin | home] <file>',
+        'usage' => 'Usage: dotfiles add [home | bin | config] <file>',
         'func' => \&add,
     },
     'restore' => {
         'desc' => 'Stop tracking a file and restore it to the home directory.',
-        'usage' => 'Usage: dotfiles restore [bin | home] <file>',
+        'usage' => 'Usage: dotfiles restore [home | bin | config] <file>',
         'func' => \&restore,
     },
     'list' => {
@@ -60,6 +60,22 @@ my $commands = { # {{{
         'desc' => 'Shortcut to run arbitrary git commands on the underlying repository.',
         'usage' => 'Usage: dotfiles git [<args>...]',
         'func' => \&git,
+    },
+}; # }}}
+
+# The folders we might want to sync
+my $contexts = { # {{{
+    'home' => {
+        'from' => "$home",
+        'to' => "$dotpath/home",
+    },
+    'bin' => {
+        'from' => "$home/bin",
+        'to' => "$dotpath/bin",
+    },
+    'config' => {
+        'from' => "$home/.config",
+        'to' => "$dotpath/config",
     },
 }; # }}}
 
@@ -115,17 +131,18 @@ sub add {
 
     my $context = 'home';
     my $file = shift;
-    if ($file eq 'bin' or $file eq 'home') {
-        $context = $file;
-        if (scalar(@_) != 1) { return help('add') }
-        $file = shift;
+    foreach my $ctx (sort keys %$contexts) {
+        if ($file eq $ctx) {
+            $context = $ctx;
+            if (scalar(@_) != 1) { return help('add') }
+            $file = shift;
+            last;
+        }
     }
 
     $file = basename($file);
-    my $tracked = "$dotpath/$context/$file";
-    my $original;
-    if ($context eq 'home') { $original = "$home/$file";
-    } else { $original = "$home/$context/$file"; }
+    my $original = "$contexts->{$context}{from}/$file";
+    my $tracked = "$contexts->{$context}{to}/$file";
 
     if (-l $original) { die "Symlink already exists.\n"; }
     if ((not -f $original) and (not -d $original)) {
@@ -148,21 +165,22 @@ sub add {
 }
 
 sub restore {
-    if (scalar(@_) == 0) { help('add'); return; }
+    if (scalar(@_) == 0) { help('restore'); return; }
     
     my $context = 'home';
     my $file = shift; 
-    if ($file eq 'bin' or $file eq 'home') {
-        $context = $file;
-        if (scalar(@_) != 0) { return help('add') }
-        $file = shift;
+    foreach my $ctx (sort keys %$contexts) {
+        if ($file eq $ctx) {
+            $context = $ctx;
+            if (scalar(@_) != 1) { return help('restore') }
+            $file = shift;
+            last;
+        }
     }
 
     $file = basename($file);
-    my $tracked = "$dotpath/$context/$file";
-    my $original;
-    if ($context eq 'home') { $original = "$home/$file"; }
-    else { $context = "$home/$context/$file"; }
+    my $original = "$contexts->{$context}{from}/$file";
+    my $tracked = "$contexts->{$context}{to}/$file";
 
     if (not -e $tracked) {
         die "Could not find file or directory: $tracked.\n"; }
@@ -176,26 +194,18 @@ sub restore {
 }
 
 sub list {
-    opendir(my $dh, "$dotpath/home/") or die "Unable to open $dotpath/home/.\n";
-    my @homefiles = readdir($dh);
-    closedir($dh);
-    foreach my $file (@homefiles) {
-        next if ($file =~ /^\.+$/);
-        my $tracked = "$dotpath/home/$file";
-        my $original = "$home/$file";
+    foreach my $ctx (sort keys %$contexts) {
+        my $dir = $contexts->{$ctx}{to};
+        opendir(my $dh, "$dir") or die "Unable to open $dir.\n";
+        my @files = readdir($dh);
+        closedir($dh);
+        foreach my $file (@files) {
+            next if ($file =~ /^\.+$/);
+            my $tracked = "$dir/$file";
+            my $original = "$contexts->{$ctx}{from}/$file";
+            printLink($tracked, $original);
 
-        printLink($tracked, $original)
-    }
-
-    opendir($dh, "$dotpath/bin/") or die "Unable to open $dotpath/bin/.\n";
-    my @binfiles = readdir($dh);
-    closedir($dh);
-    foreach my $file (@binfiles) {
-        next if ($file =~ /^\.+$/);
-        my $tracked = "$dotpath/bin/$file";
-        my $original = "$home/bin/$file";
-
-        printLink($tracked, $original)
+        }
     }
 }
 
@@ -218,26 +228,18 @@ sub sync {
     print "Checking for remote changes...\n";
     pull();
 
-    opendir(my $DH, "$dotpath/home/") or die "Unable to open $dotpath/home/.\n";
-    my @homefiles = readdir($DH);
-    closedir($DH);
-    foreach my $file (@homefiles) {
-        next if ($file =~ /^\.+$/); #avoid . and ..
-        my $tracked = "$dotpath/home/$file";
-        my $original = "$home/$file";
+    foreach my $ctx (sort keys %$contexts) {
+        my $dir = $contexts->{$ctx}{to};
+        opendir(my $dh, "$dir") or die "Unable to open $dir.\n";
+        my @files = readdir($dh);
+        closedir($dh);
+        foreach my $file (@files) {
+            next if ($file =~ /^\.+$/);
+            my $tracked = "$dir/$file";
+            my $original = "$contexts->{$ctx}{from}/$file";
+            syncFile($tracked, $original);
+        }
 
-        syncFile($tracked, $original);
-    }
-
-    opendir($DH, "$dotpath/bin/") or die "Unable to open $dotpath/bin/.\n";
-    my @binfiles = readdir($DH);
-    closedir($DH);
-    foreach my $file (@binfiles) {
-        next if ($file =~ /^\.+$/);
-        my $tracked = "$dotpath/bin/$file";
-        my $original = "$home/bin/$file";
-
-        syncFile($tracked, $original);
     }
 }
 
