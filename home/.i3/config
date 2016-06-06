@@ -9,6 +9,7 @@ exec --no-startup-id google-musicmanager
 exec --no-startup-id sh ~/.fehbg
 #exec --no-startup-id nitrogen --restore
 exec --no-startup-id setxkbmap -option ctrl:nocaps
+exec --no-startup-id xcape -e 'Control_L=Escape'
 #exec xrandr --output DVI-I-2 --left-of DVI-I-3
 #enabe two-finger scrolling on the laptop
 exec --no-startup-id "xinput --set-prop 12 \"Synaptics Two-Finger Scrolling\" 1 1"

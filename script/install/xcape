@@ -1,0 +1,4 @@
+
+xcape allows capslock to act as both control and escape
+
+sudo apt-get install xcape
