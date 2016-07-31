@@ -3,11 +3,10 @@
 use strict;
 use warnings;
 
-use File::HomeDir;
 use File::Basename;
 use File::Copy qw(move);
 
-my $home = File::HomeDir->my_home;
+my $home = $ENV{"HOME"};
 my $dotpath = "$home/.dotfiles";
 
 my $commands = { # {{{

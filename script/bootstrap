@@ -3,9 +3,7 @@
 use strict;
 use warnings;
 
-use File::HomeDir;
-
-my $home = File::HomeDir->my_home . "";
+my $home = $ENV{"HOME"} . "";
 my $dotpath = "$home/.dotfiles";
 
 
