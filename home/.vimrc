@@ -116,8 +116,8 @@ map<Leader>n :NERDTreeToggle<CR>                    "nerdtree file browsing
 "==============================================================================
 syntax enable                                       "enable syntax highlighting
 
-let base16colorspace=256
-colorscheme base16-default
+"let base16colorspace=256
+"colorscheme base16-default
 set background=dark
 
 " }}}

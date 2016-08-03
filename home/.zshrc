@@ -32,3 +32,5 @@ alias sshb="ssh -Y wk@ssh.cs.brown.edu"
 alias vpnb="sudo openvpn ~/misc/browncs-gateall.ovpn"
 alias matlab="matlab -nodesktop -nosplash"
 # }}}
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
