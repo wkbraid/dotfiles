@@ -1,0 +1,30 @@
+Config {
+      position = Bottom
+
+    , template = "%date% }{ %wlp2s0wi% | %battery%"
+
+    , commands =
+    [ Run Wireless      "wlp2s0"
+                        [ "--template", "Wifi: (<essid>) <quality>"
+                        , "--Low",      "30"
+                        , "--High",     "70"
+                        , "--low",      "red"
+                        , "--normal",   "yellow"
+                        , "--high",     "darkorange"
+                        ] 50
+
+    , Run Battery       [ "--template", "Bat: [<leftbar>]<acstatus>"
+                        , "--Low",      "20"
+                        , "--High",     "70"
+                        , "--low",      "red"
+                        , "--normal",   "yellow"
+                        , "--high",     "darkorange"
+                        , "--"
+                            , "-f",     "AC0/online"
+                            , "-o",     "<left>%"
+                            , "-O",     "<fc=green>Chg</fc>"
+                        ] 100
+
+    , Run Date          "%Y-%m-<fc=darkorange>%d</fc> (%a) <fc=darkorange>%I</fc>:<fc=darkorange>%M</fc>" "date" 10
+    ]
+}
