@@ -151,8 +151,8 @@ set tabstop=4
 " Key Bindings {{{
 "==============================================================================
 "Move a line of text using ALT+[jk]
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
+nmap <S-j> mz:m+<cr>`z
+nmap <S-k> mz:m-2<cr>`z
 
 "Move vertically by visual line
 nnoremap j gj
