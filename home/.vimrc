@@ -11,13 +11,16 @@ set history=500                                     "set how many lines of histo
 filetype plugin on                                  "enable filetype plugins
 filetype indent on
 
+set exrc                                            "allow local configs
+set secure                                          "disable some commands
+
 autocmd FileType * setlocal formatoptions-=cro      "never auto insert comments
 
+    \ endif
 "Return to the last edit position when opening files
 autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
-    \ endif
 
 set autoread                                        "autoread files when they change
 

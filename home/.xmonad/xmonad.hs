@@ -9,6 +9,7 @@ browser = "google-chrome"
 main = xmonad =<< (xmobar $ defaultConfig {
     terminal    = term,
     borderWidth = 2,
+    focusedBorderColor = "#cc6600",
     startupHook = startup,
     -- make sure xmobar isn't hidden
     manageHook = manageDocks <+> manageHook defaultConfig,

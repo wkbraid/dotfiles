@@ -6,3 +6,7 @@ openvpn
 jekyll
 xmonad
 xmobar
+sox
+libsox-fmt-all
+pavucontrol
+blueman

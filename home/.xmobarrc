@@ -1,7 +1,7 @@
 Config {
       position = Bottom
 
-    , template = "%date% }{ %wlp2s0wi% | %battery%"
+    , template = "%battery% | %wlp2s0wi% }{ %date%"
 
     , commands =
     [ Run Wireless      "wlp2s0"
@@ -14,7 +14,7 @@ Config {
                         ] 50
 
     , Run Battery       [ "--template", "Bat: [<leftbar>]<acstatus>"
-                        , "--Low",      "20"
+                        , "--Low",      "30"
                         , "--High",     "70"
                         , "--low",      "red"
                         , "--normal",   "yellow"
@@ -25,6 +25,6 @@ Config {
                             , "-O",     "<fc=green>Chg</fc>"
                         ] 100
 
-    , Run Date          "%Y-%m-<fc=darkorange>%d</fc> (%a) <fc=darkorange>%I</fc>:<fc=darkorange>%M</fc>" "date" 10
+    , Run Date          "<fc=darkorange>%I</fc>:<fc=darkorange>%M</fc> %Y-%m-<fc=darkorange>%d</fc> (%a)" "date" 10
     ]
 }
