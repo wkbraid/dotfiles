@@ -45,6 +45,11 @@ my $commands = { # {{{
         'usage' => 'Usage: dotfiles commit <message>',
         'func' => \&commit,
     },
+    'status' => {
+        'desc' => 'Query status of the underlying repository.',
+        'usage' => 'Usage: dotfiles status',
+        'func' => \&status,
+    },
     'pull' => {
         'desc' => 'Perform a git pull on the underlying repository.',
         'usage' => 'Usage: dotfiles pull',
@@ -290,6 +295,15 @@ sub commit {
         system("git", "-C", "$dotpath/", "commit", "-am", $msg);
     } else {
         help('commit');
+    }
+}
+
+sub status {
+    my $args = scalar(@_);
+    if ($args == 0) {
+        system("git", "-C", "$dotpath/", "status");
+    } else {
+        help('status');
     }
 }
 
