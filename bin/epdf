@@ -1,4 +1,4 @@
 cd $(dirname "$1")
 
-gvim "$(basename "$1")" &
-latexmk -pvc -silent "$(basename "$1")" &
+latexmk -pvc -silent "$(basename "$1")" &>/dev/null &
+vim "$(basename "$1")"

@@ -10,3 +10,7 @@ sox
 libsox-fmt-all
 pavucontrol
 blueman
+trayer
+vlc
+hoogle
+latexmk
