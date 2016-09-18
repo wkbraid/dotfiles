@@ -27,6 +27,8 @@ set autoread                                        "autoread files when they ch
 let mapleader = "\\"                                 "set mapleader for extra key combinations
 let g:mapleader = "\\"
 
+set clipboard=unnamedplus
+
 set lazyredraw                                      "only redraw when necessary
 
 let $PATH = $PATH . ':' . expand('~/.local/bin')
