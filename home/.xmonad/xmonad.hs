@@ -3,8 +3,8 @@ import XMonad.Util.EZConfig
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 
-term = "gnome-terminal"
-browser = "google-chrome"
+term = "xfce4-terminal"
+browser = "chromium"
 
 main = xmonad =<< (xmobar $ defaultConfig {
     terminal    = term,
