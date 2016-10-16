@@ -167,6 +167,9 @@ nnoremap k gk
 nnoremap B ^
 nnoremap E $
 
+"Saving typo
+command W w
+
 "}}}
 
 "==============================================================================
