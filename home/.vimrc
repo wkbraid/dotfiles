@@ -146,9 +146,9 @@ set expandtab                                       "use spaces instead of tabs
 
 set smarttab                                        "insert a mix of tabs and spaces when appropriate
 
-set softtabstop=4                                   "set tabwidth to four
-set shiftwidth=4
-set tabstop=4
+set softtabstop=2                                   "set tabwidth to four
+set shiftwidth=2
+set tabstop=2
 
 " }}}
 
