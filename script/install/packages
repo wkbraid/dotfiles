@@ -1,16 +1,13 @@
-google-chrome (web download)
-xcape (control *and* escape key)
-i3wm
+vim
+git
+google-chrome     // (web download)
+xcape             // control *and* escape key
 xbacklight
-openvpn
-jekyll
+openvpn           // cs vpn access
 xmonad
 xmobar
-sox
-libsox-fmt-all
-pavucontrol
-blueman
-trayer
-vlc
-hoogle
-latexmk
+trayer            // system tray
+nm-applet         // network manager applet
+latexmk           // latex compilation
+dmenu
+vim-gtk           // for clipboard support

@@ -4,7 +4,7 @@
 umask 007
 export PATH="/home/wk/.local/bin:/home/wk/bin:$PATH"
 export EDITOR="vim"
-export PS1="\e[0;31m\w\$ \e[m"
+export PS1="\[\e[0;31m\]\w\$ \[\e[m\]"
 
 setxkbmap -option ctrl:nocaps
 
