@@ -23,6 +23,7 @@ main = xmonad =<< (xmobar $ defaultConfig {
     ("<XF86AudioRaiseVolume>",  spawn "amixer -D pulse sset Master 5%+"),
     ("<XF86AudioLowerVolume>",  spawn "amixer -D pulse sset Master 5%-"),
     ("<XF86AudioMute>",         spawn "amixer -D pulse sset Master toggle"),
+    ("M4-<F4>",   spawn "xbacklight =1"),
     ("M4-<F5>",   spawn "xbacklight -dec 10"),
     ("M4-<F6>",   spawn "xbacklight -inc 10")])
 

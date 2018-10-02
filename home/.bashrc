@@ -18,7 +18,8 @@ setxkbmap -option ctrl:nocaps
 # Aliases {{{
 #=========================================================================
 alias ls="ls -F --color=auto"
-alias sshb="ssh -Y wk@ssh.cs.brown.edu"
+alias grep="grep --color=auto -n"
+alias sshb="ssh -Y wkochans@ssh.cs.brown.edu"
 alias vpnb="sudo openvpn ~/misc/browncs-gateall.ovpn"
 alias matlab="matlab -nodesktop -nosplash"
 
