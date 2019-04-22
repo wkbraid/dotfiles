@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =5
 let g:netrw_dirhist_1='/home/wk/planarity/src'
 let g:netrw_dirhist_2='/home/wk/.xmonad'
 let g:netrw_dirhist_3='/home/wk/.dotfiles/script/install'
+let g:netrw_dirhist_4='/home/wk/tmp'
+let g:netrw_dirhist_5='/home/wk/.dotfiles/script/install'

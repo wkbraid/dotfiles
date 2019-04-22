@@ -13,3 +13,5 @@ dmenu
 vim-gtk           // for clipboard support
 nodejs            // `curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -` for PPA
 git config --global user.name "wspk"
+feh               // .xsession sets background image
+lyx
