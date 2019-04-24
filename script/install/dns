@@ -1,0 +1,10 @@
+Setup google dns:
+
+1) Open the config:
+$ sudo vim /etc/dhcp/dhclient.conf
+2) At the bottom of the file, add:
+supersede domain-name-servers 8.8.8.8;
+3) Restart network manager
+$ sudo service network-manager restart
+
+Can also be done through the network manager on a per-network basis
