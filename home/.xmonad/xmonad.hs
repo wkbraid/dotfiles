@@ -35,3 +35,4 @@ startup = do
     spawn "trayer --edge bottom --align right --width 20 --distancefrom right --distance 137 --height 14 --transparent true --tint 0x000000"
     spawn "nm-applet"
     spawn "cat /proc/$(ps aux | grep [x]monad-x86_64-linux | awk '{print $2}')/fd/* > /dev/null"
+    spawn "insync start"
