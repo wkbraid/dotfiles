@@ -37,6 +37,26 @@ let $PATH = $PATH . ':' . expand('~/.local/bin')
 " }}}
 
 "==============================================================================
+" Latex Mode {{{
+"==============================================================================
+" Using vimtex
+" Most basic usage: \\ll to launch latexmk and zathura
+let g:tex_flavor='xelatex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+"set conceallevel=1
+"let g:tex_conceal='abdmg'
+
+" clean up auxiliary files on exit
+augroup vimtex_config
+  autocmd!
+  autocmd User VimtexEventQuit call vimtex#compiler#clean(0)
+augroup END
+
+" }}}
+
+
+"==============================================================================
 " Haskell Mode {{{
 "==============================================================================
 map <Leader>s :SyntasticToggleMode<CR>
@@ -108,7 +128,7 @@ set showcmd                                         "show last command in bottom
 set number                                          "show line numbers
 
 set foldenable                                      "enable folding
-set foldlevelstart=10                               "open most folds by default
+set foldlevelstart=1                                "how many folds to open by default
 nnoremap <space> za
 set foldmethod=marker                               "folds deliminated by markers
 
@@ -146,7 +166,7 @@ set expandtab                                       "use spaces instead of tabs
 
 set smarttab                                        "insert a mix of tabs and spaces when appropriate
 
-set softtabstop=2                                   "set tabwidth to four
+set softtabstop=2                                   "set tabwidth to two
 set shiftwidth=2
 set tabstop=2
 
@@ -155,7 +175,7 @@ set tabstop=2
 "==============================================================================
 " Key Bindings {{{
 "==============================================================================
-"Move a line of text using ALT+[jk]
+"Move a line of text using SHIFT+[jk]
 nmap <S-j> mz:m+<cr>`z
 nmap <S-k> mz:m-2<cr>`z
 
