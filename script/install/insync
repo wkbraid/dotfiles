@@ -1,0 +1,19 @@
+Insync to sync files to google drive
+
+Install insync by deb
+
+Setup with wspkochanski@gmail.com
+Something like ~/.insync base folder (we don't use it)
+Don't select anything to sync
+
+make sure that the ignore file contains:
+dotfiles
+bin?
+Downloads or downloads
+tmp?
+
+Unselect new files syncing from cloud (top left gear near MyDrive)
+
+Then "Local Selective Sync" ~/
+merge to Drive/sync
+

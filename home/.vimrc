@@ -99,7 +99,6 @@ set mat=2                                           "how many seconds to blink w
 set number                                          "show line numbers
 set showcmd                                         "show last command in bottom bar
 set cursorline                                      "highlight current line
-filetype indent on                                  "load filetype-specific indent files
 
 set guioptions=                                     "remove menubar, toolbar, and scrollbars
 
@@ -180,6 +179,10 @@ set novisualbell
 set t_vb=
 set tm=500
 
+"Enable spellchecking
 set spell
+hi clear SpellBad                                   "Use underline to highlight errors
+hi SpellBad cterm=underline
+hi SpellBad gui=undercurl
 
 " }}}
