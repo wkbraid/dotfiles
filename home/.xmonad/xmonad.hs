@@ -36,4 +36,3 @@ startup = do
     spawn "nm-applet"
     spawn "cat /proc/$(ps aux | grep [x]monad-x86_64-linux | awk '{print $2}')/fd/* > /dev/null"
     spawn "insync start"
-    spawn "feh --big-fill /usr/share/backgrounds/hardy_wallpaper_uhd.png"
