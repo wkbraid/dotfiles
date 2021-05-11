@@ -4,6 +4,6 @@
 [push]
 	default = simple
 [credential]
-	helper = cache
+	helper = store
 [core]
 	editor = vim

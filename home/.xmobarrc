@@ -1,10 +1,12 @@
 Config {
       position = Bottom
 
-    , template = "%battery% | %wlp2s0wi% }{ %date%"
+    , font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
+
+    , template = "%battery% | %wlp59s0wi% }{ %date%"
 
     , commands =
-    [ Run Wireless      "wlp2s0"
+    [ Run Wireless      "wlp59s0"
                         [ "--template", "Wifi: (<essid>) <quality>"
                         , "--Low",      "30"
                         , "--High",     "70"
@@ -25,6 +27,6 @@ Config {
                             , "-O",     "<fc=green>Chg</fc>"
                         ] 100
 
-    , Run Date          "<fc=darkorange>%I</fc>:<fc=darkorange>%M</fc> %Y-%m-<fc=darkorange>%d</fc> (%a)" "date" 10
+    , Run Date          "<fc=darkorange>%I</fc>:<fc=darkorange>%M</fc> %m-<fc=darkorange>%d</fc>-%Y (%a)" "date" 10
     ]
 }
