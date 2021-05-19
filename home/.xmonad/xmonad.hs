@@ -20,12 +20,12 @@ main = xmonad =<< (xmobar $ defaultConfig {
     ("C-M-<Return>",            spawn browser),
     ("M-q",                     kill),
     ("M-S-r",                   restart "xmonad" True),
-    ("<XF86AudioRaiseVolume>",  spawn "amixer -D pulse sset Master 5%+"),
-    ("<XF86AudioLowerVolume>",  spawn "amixer -D pulse sset Master 5%-"),
+    ("C-<Right>",  spawn "amixer -D pulse sset Master 5%+"),
+    ("C-<Left>",  spawn "amixer -D pulse sset Master 5%-"),
     ("<XF86AudioMute>",         spawn "amixer -D pulse sset Master toggle"),
-    ("M4-<F4>",   spawn "xbacklight =1"),
-    ("M4-<F5>",   spawn "xbacklight -dec 10"),
-    ("M4-<F6>",   spawn "xbacklight -inc 10")])
+    -- ("M4-<F4>",   spawn "xbacklight =1; xrandrfix"),
+    ("C-<Down>",   spawn "xbacklight -dec 10; xrandrfix"),
+    ("C-<Up>",   spawn "xbacklight -inc 10; xrandrfix")])
 
 
 startup :: X ()

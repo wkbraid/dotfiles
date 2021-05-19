@@ -1,0 +1,3 @@
+brightnesspercent=$(echo "scale=2; $(xbacklight) / 100" | bc -l)
+
+xrandr --output eDP1 --brightness $brightnesspercent
